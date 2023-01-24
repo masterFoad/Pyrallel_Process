@@ -1,12 +1,10 @@
 from typing import Callable, List
 
-from helpers import config_default_values
-
 
 def tfrq(func: Callable, params: List, num_cores=None, config=None):
     import math
     from concurrent.futures import ProcessPoolExecutor
-    from helpers import param_list
+    from helpers import param_list, config_default_values
     import os
 
     if num_cores is None:
