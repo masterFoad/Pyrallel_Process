@@ -1,7 +1,7 @@
 tfrq - an easy way to parallelize processing a function
 =======================================================
 
-`tfrq on github <https://github.com/masterFoad/tfrq>`_
+`tfrq on github! <https://github.com/masterFoad/tfrq>`_
 
 Stop waiting for your code to finish, start using tfrq - the effortless solution for parallelizing your functions and supercharging your performance!
 
@@ -40,7 +40,7 @@ parameters and use all cores, so it will print the given parameters in
 parallel.
 
 Example 3 - using the config parameter:
-==========
+=======================================
 
 ::
 
@@ -63,7 +63,7 @@ Example 3 - using the config parameter:
 
 
 default config:
-==========
+===============
 
 ::
 
