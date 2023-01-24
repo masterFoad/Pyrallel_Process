@@ -1,5 +1,8 @@
 tfrq - an easy way to parallelize processing a function
 =======================================================
+
+`tfrq on github <https://github.com/masterFoad/tfrq>`_
+
 Stop waiting for your code to finish, start using tfrq - the effortless solution for parallelizing your functions and supercharging your performance!
 
 This library provides an easy way to parallelize the execution of a
