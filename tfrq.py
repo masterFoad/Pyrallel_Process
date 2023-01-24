@@ -1,37 +1,39 @@
-import math
-import os
-from concurrent.futures import ProcessPoolExecutor
+from typing import Callable, List
+
+from helpers import config_default_values
 
 
-def pyrallel_process(func, params, num_cores=os.cpu_count()):
-    """
-    Executes a given function, `func`, in parallel over a list of parameters, `params`.
-    The function uses the number of cores available in the system to divide the parameters into chunks.
-    Each chunk is then passed to a separate worker process for concurrent execution.
+def tfrq(func: Callable, params: List, num_cores=None, config=None):
+    import math
+    from concurrent.futures import ProcessPoolExecutor
+    from helpers import param_list
+    import os
 
-    Parameters:
-        - func (function): The function to be executed in parallel.
-        - params (List): The list of parameters to be passed to the function.
+    if num_cores is None:
+        num_cores = os.cpu_count()
 
-    Returns:
-        - results (List): A list of results of the function execution for each parameter.
+    if config is None:
+        config = config_default_values
 
-    Example:
+    else:
+        for cfg in config_default_values:
+            if cfg not in config:
+                config[cfg] = config_default_values[cfg]
 
-    def square(x):
-        return x * x
-
-    params = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-    results = pyrallel_process(square, params)
-
-    print(results)
-    # output: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
-    """
     chunk_size = math.ceil(len(params) / num_cores)
     chunks = [params[i:i + chunk_size] for i in range(0, len(params), chunk_size)]
-
+    print("Tfrq into", len(chunks), "Chunks for", num_cores, "cores.")
     with ProcessPoolExecutor(max_workers=num_cores) as executor:
-        results = list(executor.map(func, chunks))
+        results = list(
+            executor.map(param_list, [(func, chunk_num, chunk, config) for chunk_num, chunk in enumerate(chunks)]))
 
-    return results
+    errors = []
+    final_results = []
+    for res in results:
+        final_results.append(res[0])
+        errors.append(res[1])
+
+    if config["return_errors"]:
+        return final_results, errors
+    else:
+        return final_results
