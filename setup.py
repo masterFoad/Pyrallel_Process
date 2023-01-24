@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='tfrq',
-    version='2.0.9',
+    version='2.0.91',
     description='A library to parallelize the execution of a function in python',
     author='Foad Abo Dahood',
     long_description=readme(),

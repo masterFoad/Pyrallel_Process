@@ -61,7 +61,7 @@ Example 3 - using the config parameter:
         print(errors)  # [[], [], [], [TypeError("unsupported operand type(s) for +: 'int' and 'str'")]]
 
 Example 4 - "pass_as_single_argument": False:
-=======================================
+=============================================
 
 ::
 
