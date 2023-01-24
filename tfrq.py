@@ -3,7 +3,7 @@ from typing import Callable, List
 
 from tqdm import tqdm
 
-config_default_values = {"return_errors": False, "print_errors": True}
+config_default_values = {"pass_as_single_argument": True, "return_errors": False, "print_errors": True}
 
 
 def param_list(exec_data):
@@ -16,7 +16,10 @@ def param_list(exec_data):
     errors = []
     for param in tqdm(params, desc=f"processing: - chunk_num[{str(chunk_id)}] pid[{str(os.getpid())}]"):
         try:
-            results.append(func(param))
+            if config["pass_as_single_argument"]:
+                results.append(func(param))
+            else:
+                results.append(func(*param))
         except Exception as e:
             if config["print_errors"]:
                 print(e)
