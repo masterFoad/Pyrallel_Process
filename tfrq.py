@@ -65,7 +65,23 @@ def tfrq(func: Callable, params: List, operator=None, num_cores=None, config=Non
         final_results.append(res[0])
         errors.append(res[1])
 
+    final_results_flat = []
+    for res_per_core in final_results:
+        for res in res_per_core:
+            if res is None:
+                final_results_flat.append(None)
+            else:
+                final_results_flat.append(res)
+
+    errors_flat = []
+    for errs_per_core in errors:
+        for err in errs_per_core:
+            if err is None:
+                errors_flat.append(None)
+            else:
+                errors_flat.append(err)
+
     if config["return_errors"]:
-        return final_results, errors
+        return final_results_flat, errors_flat
     else:
-        return final_results
+        return final_results_flat

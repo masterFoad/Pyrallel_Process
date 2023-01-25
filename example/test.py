@@ -41,7 +41,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_parallel_huge_data(self):
         input_list = [[1, 2], [3, 4], [5, 5], [6, 7]]
-        list_of_results_for_all_pairs = tfrq(sum, input_list)
+        list_of_results_for_all_pairs = tfrq(sum, input_list, num_cores=1)
         print(list_of_results_for_all_pairs)  # [[3], [7], [10], [13]] -- result for each pair ordered.
 
     def test_parallel_huge_data_config(self):
