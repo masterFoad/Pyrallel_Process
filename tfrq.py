@@ -3,31 +3,39 @@ from typing import Callable, List
 
 from tqdm import tqdm
 
-config_default_values = {"pass_as_single_argument": True, "return_errors": False, "print_errors": True}
+config_default_values = {"return_errors": False, "print_errors": True}
 
 
 def param_list(exec_data):
     func = exec_data[0]
     chunk_id = exec_data[1]
     params = exec_data[2]
-    config = exec_data[3]
+    operator = exec_data[3]
+    config = exec_data[4]
 
     results = []
     errors = []
     for param in tqdm(params, desc=f"processing: - chunk_num[{str(chunk_id)}] pid[{str(os.getpid())}]"):
         try:
-            if config["pass_as_single_argument"]:
+            if operator is None:
                 results.append(func(param))
-            else:
+
+            if operator == "*":
                 results.append(func(*param))
+
+            if operator == "**":
+                results.append(func(**param))
+
+
         except Exception as e:
             if config["print_errors"]:
                 print(e)
+            results.append(None)
             errors.append(e)
     return results, errors
 
 
-def tfrq(func: Callable, params: List, num_cores=None, config=None):
+def tfrq(func: Callable, params: List, operator=None, num_cores=None, config=None):
     import math
     from concurrent.futures import ProcessPoolExecutor
     import os
@@ -48,7 +56,8 @@ def tfrq(func: Callable, params: List, num_cores=None, config=None):
     print("Tfrq into", len(chunks), "Chunks for", num_cores, "cores.")
     with ProcessPoolExecutor(max_workers=num_cores) as executor:
         results = list(
-            executor.map(param_list, [(func, chunk_num, chunk, config) for chunk_num, chunk in enumerate(chunks)]))
+            executor.map(param_list,
+                         [(func, chunk_num, chunk, operator, config) for chunk_num, chunk in enumerate(chunks)]))
 
     errors = []
     final_results = []

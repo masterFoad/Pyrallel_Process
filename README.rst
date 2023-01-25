@@ -60,21 +60,25 @@ Example 3 - using the config parameter:
         print(list_of_results_for_all_pairs)  # [[3], [7], [10], []] -- result for each pair ordered.
         print(errors)  # [[], [], [], [TypeError("unsupported operand type(s) for +: 'int' and 'str'")]]
 
-Example 4 - "pass_as_single_argument": False:
+Example 4 - operator to apply on parameters:
 =============================================
 
 ::
 
+        operator=None  -> func(args)
+        operator="*"   -> func(*args)
+        operator="**"  -> func(**args)
+
         params = ["Hello", "World", "!"]
         func = print
-        tfrq(func=func, params=params, num_cores=3, config={"pass_as_single_argument": False})
+        tfrq(func=func, params=params, num_cores=3, operator="*")
         # H e l l o
         # !
         # W o r l d ---- notice now it is func(*args) - that is causing the spaces.
 
         params = ["Hello", "World", "!"]
         func = print
-        tfrq(func=func, params=params, num_cores=3, config={"pass_as_single_argument": True})
+        tfrq(func=func, params=params, num_cores=3)
         # Hello
         # World
         # !
@@ -84,7 +88,7 @@ default config:
 
 ::
 
-    config = {"pass_as_single_argument": True, "return_errors": False, "print_errors": True}
+    config = {"return_errors": False, "print_errors": True}
 
 
 tfrq is an arabic word meaning “To Split”, which is the purpose of this

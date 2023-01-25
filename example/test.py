@@ -27,14 +27,14 @@ class MyTestCase(unittest.TestCase):
     def test_parallel_print(self):
         params = ["Hello", "World", "!"]
         func = print
-        tfrq(func=func, params=params, num_cores=3, config={"pass_as_single_argument": False})
+        tfrq(func=func, params=params, num_cores=3, operator="*")
         # H e l l o
         # !
         # W o r l d ---- notice now it is func(*args) - that is causing the spaces.
 
         params = ["Hello", "World", "!"]
         func = print
-        tfrq(func=func, params=params, num_cores=3, config={"pass_as_single_argument": True})
+        tfrq(func=func, params=params, num_cores=3)
         # Hello
         # World
         # !
