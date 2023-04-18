@@ -35,7 +35,7 @@ def param_list(exec_data):
     return results, errors
 
 
-def tfrq(func: Callable, params: List, operator=None, num_cores=None, config=None):
+def tfrq(func: Callable, params: List, operator=None, num_cores=None, config=None, custom_executor=None):
     import math
     from concurrent.futures import ProcessPoolExecutor
     import os
@@ -54,10 +54,15 @@ def tfrq(func: Callable, params: List, operator=None, num_cores=None, config=Non
     chunk_size = math.ceil(len(params) / num_cores)
     chunks = [params[i:i + chunk_size] for i in range(0, len(params), chunk_size)]
     print("Tfrq into", len(chunks), "Chunks for", num_cores, "cores.")
-    with ProcessPoolExecutor(max_workers=num_cores) as executor:
+    if custom_executor:
         results = list(
-            executor.map(param_list,
-                         [(func, chunk_num, chunk, operator, config) for chunk_num, chunk in enumerate(chunks)]))
+            custom_executor.map(param_list,
+                                [(func, chunk_num, chunk, operator, config) for chunk_num, chunk in enumerate(chunks)]))
+    else:
+        with ProcessPoolExecutor(max_workers=num_cores) as executor:
+            results = list(
+                executor.map(param_list,
+                             [(func, chunk_num, chunk, operator, config) for chunk_num, chunk in enumerate(chunks)]))
 
     errors = []
     final_results = []

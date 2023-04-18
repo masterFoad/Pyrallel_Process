@@ -23,6 +23,20 @@ def huge_list_of_data_to_process(data_list):
     return list_of_results_for_all_pairs
 
 
+def huge_list_of_data_to_process_custom_executor(data_list):
+    from concurrent.futures import ProcessPoolExecutor
+    with ProcessPoolExecutor(max_workers=2) as c_executor:
+        params = []
+
+        for data_row in data_list:
+            params.append((data_row[0], data_row[1]))
+
+        list_of_results_for_all_pairs = tfrq(calculate_sum_of_pairs, params, custom_executor=c_executor)
+
+        list_of_results_for_all_pairs = sum(list_of_results_for_all_pairs, [])
+        return list_of_results_for_all_pairs
+
+
 class MyTestCase(unittest.TestCase):
     def test_parallel_print(self):
         params = ["Hello", "World", "!"]
