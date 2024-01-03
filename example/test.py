@@ -1,6 +1,21 @@
 import unittest
 
-from tfrq import tfrq
+from tfrq import tfrq, tfrq_generator
+
+
+def greet(name="", greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+
+def multiply(*args):
+    result = 1
+    for number in args:
+        result *= number
+    return result
+
+
+def square(n):
+    return n * n
 
 
 def calculate_sum_of_pairs(list_of_pairs):
@@ -74,6 +89,20 @@ class MyTestCase(unittest.TestCase):
         # unsupported operand type(s) for +: 'int' and 'str'
         print(list_of_results_for_all_pairs)  # [[3], [7], [10], []] -- result for each pair ordered.
         print(errors)  # [[], [], [], [TypeError("unsupported operand type(s) for +: 'int' and 'str'")]]
+
+    def test_generator(self):
+        numbers = list(range(10))
+
+        for result in tfrq_generator(square, numbers):
+            print('res', result)
+
+        params = [(2, 3), (4, 5), (6, 7)]  # Each tuple will be unpacked and passed as arguments to `multiply`
+        for result in tfrq_generator(multiply, params, operator="*"):
+            print(result)
+
+        params = [{"name": "Alice", "greeting": "Hi"}, {"name": "Bob", "greeting": "Hey"}]
+        for result in tfrq_generator(greet, params, operator="**"):
+            print(result)
 
 
 if __name__ == '__main__':
