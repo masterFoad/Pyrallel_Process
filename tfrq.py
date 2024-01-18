@@ -15,26 +15,48 @@ def param_list(exec_data):
     operator = exec_data[3]
     config = exec_data[4]
 
-    results = []
-    errors = []
-    for param in tqdm(params, desc=f"processing: - chunk_num[{str(chunk_id)}] pid[{str(os.getpid())}]"):
-        try:
-            if operator is None:
-                results.append(func(param))
+    if config.get("print_off", False):
+        results = []
+        errors = []
+        for param in params:
+            try:
+                if operator is None:
+                    results.append(func(param))
 
-            if operator == "*":
-                results.append(func(*param))
+                if operator == "*":
+                    results.append(func(*param))
 
-            if operator == "**":
-                results.append(func(**param))
+                if operator == "**":
+                    results.append(func(**param))
 
 
-        except Exception as e:
-            if config["print_errors"]:
-                print(e)
-            results.append(None)
-            errors.append(e)
-    return results, errors
+            except Exception as e:
+                if config["print_errors"]:
+                    print(e)
+                results.append(None)
+                errors.append(e)
+        return results, errors
+    else:
+        results = []
+        errors = []
+        for param in tqdm(params, desc=f"processing: - chunk_num[{str(chunk_id)}] pid[{str(os.getpid())}]"):
+            try:
+                if operator is None:
+                    results.append(func(param))
+
+                if operator == "*":
+                    results.append(func(*param))
+
+                if operator == "**":
+                    results.append(func(**param))
+
+
+            except Exception as e:
+                if config["print_errors"]:
+                    print(e)
+                results.append(None)
+                errors.append(e)
+        return results, errors
 
 
 def tfrq(func: Callable, params: List, operator=None, num_cores=None, config=None, custom_executor=None,
@@ -138,7 +160,7 @@ def tfrq_generator(func: Callable, params: List, operator=None, num_cores=None, 
 
     num_cores = num_cores or os.cpu_count()
     executor = custom_executor or concurrent.futures.ProcessPoolExecutor(max_workers=num_cores)
-
+    config["print_off"] = True
     try:
         with tqdm(total=len(params), desc="Processing", smoothing=0.1) as pbar:
             future_to_param = {executor.submit(param_list, (func, i, [param], operator, config)): param for i, param in

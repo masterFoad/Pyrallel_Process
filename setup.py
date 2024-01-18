@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='tfrq',
-    version='2.0.95',
+    version='2.0.96',
     description='A library to parallelize the execution of a function in Python',
     long_description=readme(),
     long_description_content_type='text/x-rst',
